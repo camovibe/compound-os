@@ -171,7 +171,7 @@ function monday(k){return addDays(k,-dow(k));}
 function validDate(v){return /^\d{4}-\d{2}-\d{2}$/.test(v||'');}
 function clampDate(v){if(!validDate(v))return today();return diffDays(today(),v)>0?today():v;}
 function fmtN(v){if(v==null||!isFinite(v))return '-';var a=Math.abs(v);return a>=1e6?(v/1e6).toFixed(1)+'M':a>=1e4?(v/1e3).toFixed(1)+'k':a>=100?v.toFixed(0):a>=10?v.toFixed(1):v.toFixed(2);}
-function money(v){return (v>=0?'+':'')+fmtN(v);}
+function money(v){var s=fmtN(v);if(s.slice(-2)==='.0')s=s.slice(0,-2);return (v>=0?'+':'')+s;}
 function pct(v){return v==null||!isFinite(v)?'-':Math.round(v*100)+'%';}
 function e1rm(w,r){w=+w||0;r=+r||0;return r<=1?w:w*(1+r/30);}
 function vib(n){try{navigator.vibrate&&navigator.vibrate(n||12);}catch(e){}}
@@ -307,8 +307,8 @@ out.push({lv:'tip',t:'降级打法 · '+h.name,b:'近14天达成率 '+pct(r)+'�
 if(hs.length>8)out.push({lv:'tip',t:'习惯过载',b:'当前启用 '+hs.length+' 个习惯。研究与经验都表明同时建立 ≤3 个新习惯成功率最高。'});
 var fh=hs.find(function(h){return h.key==='fitness';});
 if(fh){var mon=monday(T),w=S.workouts.filter(function(x){return x.date>=mon&&x.date<=T;}).length;var left=6-dow(T);
-if(w<fh.freq&&fh.freq-w>left)out.push({lv:'warn',t:'⚠ 本周训练配额告急',b:'本周 '+w+'/'+fh.freq+' 次，剩余天数不足。今天就去。'});
-else if(w<fh.freq&&fh.freq-w===left+1-0&&left<=2)out.push({lv:'tip',t:'训练配额提醒',b:'本周 '+w+'/'+fh.freq+' 次，剩余每天都需要训练。'});}
+if(w<fh.freq&&fh.freq-w>left+1)out.push({lv:'warn',t:'⚠ 本周训练配额失守',b:'本周 '+w+'/'+fh.freq+' 次，剩余天数已无法达标。今天仍去训练——为下周蓄力，守住链条。'});
+else if(w<fh.freq&&fh.freq-w===left+1)out.push({lv:'tip',t:'训练配额提醒',b:'本周 '+w+'/'+fh.freq+' 次，剩余每天都需要训练。'});}
 var recentL=S.lifts.filter(function(x){return diffDays(x.date,T)<=14;});
 if(recentL.some(function(x){return x.result==='fail';})&&!recentL.some(function(x){return x.result==='pr';}))out.push({lv:'tip',t:'失败即数据',b:'近两周有PR失败但未突破：检查睡眠、蛋白质摄入与渐进负荷（每次+2.5%），或做一次减载周。'});
 var bs=S.body.filter(function(b){return b.w;}).slice().sort(function(a,b){return a.date<b.date?-1:1;});
@@ -371,7 +371,8 @@ function empty(t){return '<div class="empty">'+t+'</div>';}
 function vHQ(){var C=compute(),T=today(),ov=C.overall,g=(+S.settings.gain||0)/100,l=(+S.settings.loss||0)/100;
 var cur=C.idx,ref=ov.length>7?ov[ov.length-8].v:100,ch=(cur/ref-1)*100;
 var vals=ov.map(function(x){return x.v;}),best=ov.map(function(_,i){return 100*Math.pow(1+g,i+1);}),worst=ov.map(function(_,i){return 100*Math.pow(1-l,i+1);});
-var p=C.p28,daily=p==null?null:p*g-(1-p)*l,proj=daily==null?null:100*Math.pow(1+daily,365);
+var p=C.p28,proj=null;
+if(p!=null){var fr=0;C.hs.forEach(function(h){fr+=h.freq/7;});fr=C.hs.length?fr/C.hs.length:0;proj=100*Math.pow(1+(p*g-(1-p)*l)*fr,365);}
 var mon=monday(T),wk=S.workouts.filter(function(w){return w.date>=mon&&w.date<=T;}).length;
 var bs=S.body.filter(function(b){return b.w;}).slice().sort(function(a,b){return a.date<b.date?-1:1;}),lb=bs[bs.length-1],h=+S.profile.height,bmi=lb&&h?lb.w/Math.pow(h/100,2):null;
 var ym=T.slice(0,7),mp=S.trades.filter(function(t){return t.date.slice(0,7)===ym;}).reduce(function(a,t){return a+t.pnl;},0);
@@ -390,7 +391,7 @@ return ''+
 '<div style="margin-top:10px">'+adv.map(function(a){return '<div class="adv '+a.lv+'"><b>'+esc(a.t)+'</b>'+esc(a.b)+'</div>';}).join('')+'</div></div>'+
 '<div class="panel"><div class="ph"><h3>365日推演 PROJECTION</h3><small>按近28天达成率</small></div><div class="grid3">'+
 stat('1.01^365','37.78','cy')+stat('0.99^365','0.03','dn')+stat('你的节奏',proj==null?'-':fmtN(proj),proj!=null&&proj>=100?'up':'am')+'</div>'+
-'<div class="dim" style="font-size:11px;margin-top:8px">近28天综合达成率 <b class="cy">'+pct(p)+'</b>。达成率每提高10%，年化指数将显著抬升——复利对一致性极其敏感。</div></div>'+
+'<div class="dim" style="font-size:11px;margin-top:8px">近28天综合达成率 <b class="cy">'+pct(p)+'</b>，按各习惯每周频率折算计息天数（与复利指数同源）。一致性每提高10个点，年化显著抬升。</div></div>'+
 '<div class="panel"><div class="ph"><h3>战区速览 SITREP</h3></div><div class="grid2">'+
 stat('本周训练',wk+' 次')+stat('PR突破 / 失败','<span class="up">'+C.pr+'</span> / <span class="dn">'+C.fail+'</span>')+
 stat('最新体重 / BMI',lb?(lb.w+'kg / '+(bmi?bmi.toFixed(1):'-')):'-')+stat('本月交易',S.trades.length?money(mp):'-',mp>=0?'up':'dn')+'</div></div>'+
