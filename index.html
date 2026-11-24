@@ -35,7 +35,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .xpbar{height:3px;background:var(--ln);margin-top:3px}.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--g))}
 .icon-btn{background:none;border:1px solid var(--ln2);width:34px;height:34px;color:var(--c);font-size:16px;cursor:pointer;flex:none}
 main{max-width:640px;margin:0 auto}
-.panel{position:relative;margin:12px;padding:14px;background:linear-gradient(180deg,rgba(13,24,29,.93),rgba(8,14,17,.93));border:1px solid var(--ln);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px)))
+.panel{position:relative;margin:12px;padding:14px;background:linear-gradient(180deg,rgba(13,24,29,.93),rgba(8,14,17,.93));border:1px solid var(--ln);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
 .panel::before{content:'';position:absolute;left:0;top:0;width:18px;height:18px;border-left:2px solid var(--g);border-top:2px solid var(--g)}
 .panel::after{content:'';position:absolute;right:0;bottom:0;width:18px;height:18px;border-right:2px solid var(--g);border-bottom:2px solid var(--g)}
 .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
@@ -193,7 +193,7 @@ var LIB=[
 {key:'water',name:'饮水2L',icon:'💧',cat:'体能',freq:7,why:'轻度脱水即可降低认知表现与训练输出。',min:'起床一杯水'},
 {key:'diet',name:'控糖清洁饮食',icon:'🥗',cat:'体能',freq:6,why:'饮食决定体重曲线的斜率，训练决定身体的形状。',min:'今天不喝含糖饮料'},
 {key:'skill',name:'外语/硬技能',icon:'🧠',cat:'认知',freq:5,why:'可迁移技能的复利：每多一项技能，机会集合呈组合式增长。',min:'背5个单词 / 看1段教程'},
-{key:'review',name:'每日复盘',icon:'🗒️',cat:'心智',freq:7,why:'没有复盘的经验只是经历。复盘把错误变成资产。（写战地日记≥10字自动打卡）',min:'写下今天1个教训'},
+{key:'review',name:'每日复盘',icon:'🗒️',cat:'心智',freq:7,def:1,why:'没有复盘的经验只是经历。复盘把错误变成资产。（写战地日记≥10字自动打卡）',min:'写下今天1个教训'},
 {key:'gratitude',name:'感恩记录',icon:'🙏',cat:'心智',freq:7,why:'积极心理学研究显示可提升幸福感与睡眠质量。',min:'写1件感谢的事'},
 {key:'detox',name:'数字断食1h',icon:'📵',cat:'心智',freq:5,why:'注意力是新时代最稀缺的本金。',min:'睡前30分钟不刷手机'},
 {key:'social',name:'深度联结',icon:'🤝',cat:'关系',freq:2,why:'哈佛成人发展研究(80+年)：良好关系是幸福与长寿最强的预测因子。',min:'给一位重要的人发条消息'},
@@ -585,7 +585,7 @@ function dl(name,href){var a=document.createElement('a');a.href=href;a.download=
 /* ================= TOAST / RENDER ================= */
 function toast(m){var t=$('#toast'),d=document.createElement('div');d.textContent=m;t.appendChild(d);setTimeout(function(){d.remove();},2200);}
 function render(){var C=compute(),R=C.rank;$('#callsign').textContent=S.profile.name+' · '+today()+' · D+'+C.days;
-$('#rankbox').innerHTML='<b>'+R.cur[1]+'</b> <span class="dim">'+R.cur[2]+'</span><div class="dim">'+C.xp+' XP'+(R.nx?' / '+R.nx[0]:'')+'</div><div class="xpbar"><i style="width:'+(R.pct*100).toFixed(1)+'%"></i></div>';
+$('#rankbox').innerHTML='<b>'+R.cur[1]+'</b> <span class="dim">'+R.cur[2]+'</span><div class="dim">'+C.xp+' XP'+(R.nx?' / '+R.nx[0]:'')+'</div><div class="xpbar"><i style="width:'+(R.pct*100).toFixed(1)+'%"></i></div'];
 if(R.i>(S.ext.rankI||0)){S.ext.rankI=R.i;Store.set(KEY,JSON.stringify(S));setTimeout(function(){toast('★ 晋升：'+R.cur[1]+' '+R.cur[2]);vib([30,40,30]);},300);}
 document.querySelectorAll('.tabs button').forEach(function(b){b.classList.toggle('on',b.dataset.tab===TAB);});
 var V={hq:vHQ,ops:vOPS,body:vBODY,trade:vTRADE,intel:vINTEL}[TAB]||vHQ;
