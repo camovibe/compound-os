@@ -314,7 +314,7 @@ if(recentL.some(function(x){return x.result==='fail';})&&!recentL.some(function(
 var bs=S.body.filter(function(b){return b.w;}).slice().sort(function(a,b){return a.date<b.date?-1:1;});
 var gw=parseFloat(S.profile.goalWeight);
 if(bs.length>=2&&gw){var last=bs[bs.length-1],old=bs.find(function(b){return diffDays(b.date,last.date)<=30;})||bs[0];var dir=gw<last.w?-1:1,mv=(last.w-old.w)*dir;
-out.push(mv>0?{lv:'good',t:'体重朝目标推进',b:'近期 '+(last.w-old.w>0?'+':'')+(last.w-old.w).toFixed(1)+'kg，距目标还差 '+Math.abs(last.w-gw).toFixed(1)+'kg。保持节奏。'}:{lv:'tip',t:'体重未朝目标移动',b:'结果是滞后指标。检查领先指标：训练频率、饮食习惯完成率、睡眠。'});}
+out.push(mv>0?{lv:'good',t:'体重朝目标推进',b:'近期 '+(last.w-old.w>0?'+':'')+(last.w-old.w).toFixed(1)+'kg，距目标还差 '+Math.abs(gw-last.w).toFixed(1)+'kg。保持节奏。'}:{lv:'tip',t:'体重未朝目标移动',b:'结果是滞后指标。检查领先指标：训练频率、饮食习惯完成率、睡眠。'});}
 if(S.trades.length>=5){var ts=S.trades.slice(-20),st=tstats(ts);
 if(st.curCL>=3)out.push({lv:'warn',t:'⚠ 连亏 '+st.curCL+' 笔：强制冷却',b:'建议暂停交易24小时，仓位减半后再恢复。保护本金就是保护复利。'});
 if(st.disc<0.8)out.push({lv:'warn',t:'⚠ 纪律执行率 '+pct(st.disc),b:'近20笔中违规交易过多。复盘违规单的情绪标签，找到触发器。'});
@@ -330,7 +330,7 @@ var order={warn:0,tip:1,good:2};out.sort(function(a,b){return order[a.lv]-order[
 function vMEMENTO(){var M=S.memento||{birth:'',years:80,enough:'',fears:[]};
 if(!M.birth)return '<div class="panel"><div class="ph"><h3>⏳ MEMENTO 死亡倒计时</h3><small>镜像 · 不入指数</small></div><div class="dim" style="font-size:12px;line-height:1.8">「你永远不知道什么时候死，但你可以知道大概还剩多少。」<br>设置出生日期后，这里会基于当前节奏，把你的习惯折算成<b class="cy">余生次数</b>。</div><button class="btn block" style="margin-top:10px" data-act="memento">⚙ 设置倒计时</button></div>';
 var T=today(),lived=diffDays(M.birth,T),left=Math.max(0,Math.round(M.years*365.25)-lived),wl=Math.floor(left/7);
-var C=compute(),rows=C.hs.map(function(h){var r=rate(h,28);return r==null?null:{h:h,n:Math.round(r*wl)};}).filter(function(x){return x&&x.n>0;}).sort(function(a,b){return b.n-a.n;}).slice(0,6);
+var C=compute(),rows=C.hs.map(function(h){var r=rate(h,28);return r==null?null:{h:h,n:Math.round(r*h.freq*wl)};}).filter(function(x){return x&&x.n>0;}).sort(function(a,b){return b.n-a.n;}).slice(0,6);
 var fears=(M.fears||[]).slice().sort(function(a,b){return (a.done?1:0)-(b.done?1:0);}),fdone=fears.filter(function(f){return f.done;}).length;
 var tot=S.trades.reduce(function(a,t){return a+t.pnl;},0),en=parseFloat(M.enough),fueled=en>0&&tot>=en;
 return '<div class="panel"><div class="ph"><h3>⏳ MEMENTO 死亡倒计时</h3><small>按 '+M.years+' 年预期 · <span class="cy" data-act="memento" style="cursor:pointer">调整</span></small></div><div class="grid3">'+
