@@ -307,7 +307,7 @@ out.push({lv:'tip',t:'降级打法 · '+h.name,b:'近14天达成率 '+pct(r)+'�
 if(hs.length>8)out.push({lv:'tip',t:'习惯过载',b:'当前启用 '+hs.length+' 个习惯。研究与经验都表明同时建立 ≤3 个新习惯成功率最高。'});
 var fh=hs.find(function(h){return h.key==='fitness';});
 if(fh){var mon=monday(T),w=S.workouts.filter(function(x){return x.date>=mon&&x.date<=T;}).length;var left=6-dow(T);
-if(w<fh.freq&&fh.freq-w>left)out.push({lv:'warn',t:'⚠ 本周训练配额告急',b:'本周 '+w+'/'+fh.freq+' 次，剩余天数不足。今天就去。'});
+if(w<fh.freq&&fh.freq-w>left)out.push({lv:'warn',t:'⚠ 本周训练配额告急',b:'本周 '+w+'/'+fh.freq+' 次，剩余天数不足。今天就去。']);
 else if(w<fh.freq&&fh.freq-w===left+1-0&&left<=2)out.push({lv:'tip',t:'训练配额提醒',b:'本周 '+w+'/'+fh.freq+' 次，剩余每天都需要训练。'});}
 var recentL=S.lifts.filter(function(x){return diffDays(x.date,T)<=14;});
 if(recentL.some(function(x){return x.result==='fail';})&&!recentL.some(function(x){return x.result==='pr';}))out.push({lv:'tip',t:'失败即数据',b:'近两周有PR失败但未突破：检查睡眠、蛋白质摄入与渐进负荷（每次+2.5%），或做一次减载周。'});
@@ -527,7 +527,6 @@ function fSettings(){openSheet('⚙ 系统设置','<label class="f">代号 CALLS
 '<p class="dim" style="font-size:11px;margin-top:12px">COMPOUND//OS v'+APP_VERSION+' · schema '+SCHEMA+'<br>iOS：Safari 分享 → 添加到主屏幕｜Android：Chrome 菜单 → 安装应用</p>');}
 function fExport(){var js=JSON.stringify(S,null,1);openSheet('⇩ 导出备份','<div class="grid2"><button class="btn" data-act="dl-backup">⇩ 下载 JSON</button><button class="btn c" data-act="copy-backup">⧉ 复制</button></div><label class="f" style="margin-top:10px">备份内容（下载受限时可手动复制）<textarea id="bkOut" readonly>'+esc(js)+'</textarea></label>');}
 function fImportBackup(){openSheet('⇧ 导入备份','<label class="f">选择备份文件<input type="file" id="bkFile" accept=".json,application/json"></label><label class="f">或粘贴备份 JSON<textarea id="bkTxt"></textarea></label><button class="btn r block" data-act="do-import-backup" data-confirm="1">⚠ 覆盖当前数据并导入</button>');}
-
 function fMemento(){var M=S.memento;openSheet('⏳ MEMENTO 设置','<label class="f">出生日期<input type="date" id="mBirth" value="'+esc(M.birth||'')+'" max="'+today()+'"></label>'+
 '<label class="f">预期寿命（别再假装永生）<select id="mYears">'+[60,70,80,90,100].map(function(y){return '<option value="'+y+'"'+(M.years===y?' selected':'')+'>'+y+' 岁</option>';}).join('')+'</select></label>'+
 '<label class="f">「够了」数字：累计盈亏达到多少就兑换时间<input id="mEnough" inputmode="decimal" value="'+esc(M.enough||'')+'" placeholder="例如 100000，留空则不显示"></label>'+
@@ -636,8 +635,8 @@ if(ex2){ex2.text=tx;ex2.mood=MOOD;}else S.journal.push({id:uid(),date:T,text:tx,
 if(tx.length>=10&&autoMark('review',T))marks.push('复盘');if(tx.length>=100&&autoMark('write',T))marks.push('写作');save();toast('📡 已存档'+(marks.length?' · 自动打卡'+marks.join('/'):''));render();break;
 case 'save-settings':S.profile.name=(val('sName')||'指挥官').slice(0,16);S.profile.height=parseFloat(val('sH'))||'';S.profile.goalWeight=parseFloat(val('sGW'))||'';
 S.settings.gain=Math.max(0,Math.min(10,parseFloat(val('sG'))||0));S.settings.loss=Math.max(0,Math.min(10,parseFloat(val('sL'))||0));
-S.settings.ghPat=val('sGhPat').trim();S.settings.ghRepo=(val('sGhRepo').trim()||'compound-os-backup').replace(/[^a-zA-Z0-9\-_.]/g,'');save();closeSheet();toast('设置已保存');render();break;
 S.settings.origins=val('sO').split(',').map(function(s){return s.trim();}).filter(Boolean);
+S.settings.ghPat=val('sGhPat').trim();S.settings.ghRepo=(val('sGhRepo').trim()||'compound-os-backup').replace(/[^a-zA-Z0-9\-_.]/g,'');save();closeSheet();toast('设置已保存');render();break;
 case 'memento':fMemento();break;
 case 'save-memento':S.memento.birth=val('mBirth');S.memento.years=+val('mYears')||80;S.memento.enough=val('mEnough').trim();save();closeSheet();toast('MEMENTO 已保存');render();break;
 case 'fear-add':var ft=val('fearTxt').trim();if(!ft){toast('先写下来');break;}S.memento.fears.push({id:uid(),text:ft.slice(0,60),added:today(),done:false});save();render();break;
