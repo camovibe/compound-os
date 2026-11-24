@@ -307,7 +307,7 @@ out.push({lv:'tip',t:'降级打法 · '+h.name,b:'近14天达成率 '+pct(r)+'�
 if(hs.length>8)out.push({lv:'tip',t:'习惯过载',b:'当前启用 '+hs.length+' 个习惯。研究与经验都表明同时建立 ≤3 个新习惯成功率最高。'});
 var fh=hs.find(function(h){return h.key==='fitness';});
 if(fh){var mon=monday(T),w=S.workouts.filter(function(x){return x.date>=mon&&x.date<=T;}).length;var left=6-dow(T);
-if(w<fh.freq&&fh.freq-w>left)out.push({lv:'warn',t:'⚠ 本周训练配额告急',b:'本周 '+w+'/'+fh.freq+' 次，剩余天数不足。今天就去。']);
+if(w<fh.freq&&fh.freq-w>left)out.push({lv:'warn',t:'⚠ 本周训练配额告急',b:'本周 '+w+'/'+fh.freq+' 次，剩余天数不足。今天就去。'});
 else if(w<fh.freq&&fh.freq-w===left+1-0&&left<=2)out.push({lv:'tip',t:'训练配额提醒',b:'本周 '+w+'/'+fh.freq+' 次，剩余每天都需要训练。'});}
 var recentL=S.lifts.filter(function(x){return diffDays(x.date,T)<=14;});
 if(recentL.some(function(x){return x.result==='fail';})&&!recentL.some(function(x){return x.result==='pr';}))out.push({lv:'tip',t:'失败即数据',b:'近两周有PR失败但未突破：检查睡眠、蛋白质摄入与渐进负荷（每次+2.5%），或做一次减载周。'});
@@ -447,7 +447,7 @@ return '<div class="panel"><div class="grid3"><button class="btn" data-act="add-
 '<div class="panel"><div class="ph"><h3>战绩 PERFORMANCE</h3><small>'+st.n+' 笔</small></div><div class="grid3">'+
 stat('总盈亏',money(st.tot),st.tot>=0?'up':'dn')+stat('胜率',pct(st.n?st.win:null))+stat('盈亏比',st.pf===Infinity?'∞':fmtN(st.pf))+
 stat('平均R',st.avgR==null?'-':st.avgR.toFixed(2)+'R','cy')+stat('纪律执行',pct(st.n?st.disc:null),st.disc>=.8?'up':'am')+stat('最大回撤',fmtN(-st.mdd),'dn')+
-stat('均盈',fmtN(st.avgW),'up')+stat('均亏',fmtN(-st.avgL),'dn')+stat('最大连亏',st.mcl+'笔')+'</div>'+
+stat('均盈',fmtN(st.avgW),'up')+stat('均亏',fmtN(-st.avgL),'dn')+stat('最大连亏',st.mcl+'笔')+'</div'+
 (st.curve.length>=2?'<div style="margin-top:10px">'+chart({lines:[{v:st.curve,c:st.tot>=0?'#39ff88':'#ff3b5c',fill:1,dot:1,w:2}],labels:[ts[0].date.slice(5),ts[ts.length-1].date.slice(5)]})+'</div>':empty('至少2笔交易后生成资金曲线'))+'</div>'+
 '<div class="panel"><div class="ph"><h3>纪律审计 DISCIPLINE AUDIT</h3></div><div class="grid2">'+
 stat('✓ 纪律内 '+sa.n+'笔',money(sa.tot)+' · 胜'+pct(sa.n?sa.win:null),sa.tot>=0?'up':'dn')+stat('✗ 违规 '+sb.n+'笔',money(sb.tot)+' · 胜'+pct(sb.n?sb.win:null),sb.tot>=0?'up':'dn')+'</div>'+
