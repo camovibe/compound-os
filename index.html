@@ -148,7 +148,7 @@ pre.code{background:#050b0e;border:1px solid var(--ln2);padding:10px;font-size:1
 (function(){
 'use strict';
 /* ================= CONFIG ================= */
-var APP_VERSION='1.0.0', SCHEMA=1, KEY='compoundos.state', BRIDGE_KEY='compoundos.bridge.inbox', BC_NAME='compoundos-bridge';
+var APP_VERSION='1.0.1', SCHEMA=1, KEY='compoundos.state', BRIDGE_KEY='compoundos.bridge.inbox', BC_NAME='compoundos-bridge';
 
 /* ================= SAFE STORAGE（沙箱/隐私模式降级为内存） ================= */
 var Store=(function(){var ok=false,mem={};try{var t='__co_t';window.localStorage.setItem(t,'1');window.localStorage.removeItem(t);ok=true;}catch(e){ok=false;}
@@ -199,9 +199,10 @@ var LIB=[
 {key:'social',name:'深度联结',icon:'🤝',cat:'关系',freq:2,why:'哈佛成人发展研究(80+年)：良好关系是幸福与长寿最强的预测因子。',min:'给一位重要的人发条消息'},
 {key:'outdoor',name:'晨光/户外',icon:'☀️',cat:'体能',freq:5,why:'早晨自然光校准昼夜节律，改善睡眠与情绪。',min:'出门晒5分钟太阳'},
 {key:'weekly',name:'周度战略复盘',icon:'🧭',cat:'心智',freq:1,why:'每周校准方向，避免“在错误方向上努力复利”。',min:'回答：本周最重要的1件事'},
-{key:'declutter',name:'整理/断舍离',icon:'🧹',cat:'环境',freq:2,why:'环境设计 > 意志力。整洁环境降低一切好习惯的启动阻力。',min:'整理1个抽屉'}
+{key:'declutter',name:'整理/断舍离',icon:'🧹',cat:'环境',freq:2,why:'环境设计 > 意志力。整洁环境降低一切好习惯的启动阻力。',min:'整理1个抽屉'},
+{key:'microadv',name:'每周微冒险',icon:'🧭',cat:'心智',freq:1,why:'体验是随时间升值的资产——记忆会被大脑重新加工，回看时反而加分。不必等假期：一条没走过的下班路、一个人探店都算。',min:'今天走一条新路 / 试一家新店'}
 ];
-var QUOTES=['1.01^365 = 37.8　｜　0.99^365 = 0.03','你不会升到目标的高度，你会跌到系统的水平。—— James Clear','永不连续错过两次。','先求不亏，再求盈利。活下来，复利才有时间发挥作用。','动作 > 动机。先执行最小剂量，状态会跟上来。','失败只是付费的数据。记录它，它就成了资产。','每一次打卡，都是在为你想成为的人投票。','重要的不是强度，是出勤率。','不要打断复利。—— 查理·芒格','减少愚蠢比追求聪明更有效。','计划你的交易，交易你的计划。','痛苦 + 反思 = 进步。—— Ray Dalio','今天的体重是过去30天的结果。','只需要比昨天的自己好1%。','把门槛降到不可能失败，坚持就不再需要意志力。','系统 > 目标。目标决定方向，系统决定进度。','复利曲线的前半段几乎是平的，大多数人在拐点前离场。','让好习惯显而易见，让坏习惯难以触及。'];
+var QUOTES=['1.01^365 = 37.8　｜　0.99^365 = 0.03','你不会升到目标的高度，你会跌到系统的水平。—— James Clear','永不连续错过两次。','先求不亏，再求盈利。活下来，复利才有时间发挥作用。','动作 > 动机。先执行最小剂量，状态会跟上来。','失败只是付费的数据。记录它，它就成了资产。','每一次打卡，都是在为你想成为的人投票。','重要的不是强度，是出勤率。','不要打断复利。—— 查理·芒格','减少愚蠢比追求聪明更有效。','计划你的交易，交易你的计划。','痛苦 + 反思 = 进步。—— Ray Dalio','今天的体重是过去30天的结果。','只需要比昨天的自己好1%。','把门槛降到不可能失败，坚持就不再需要意志力。','系统 > 目标。目标决定方向，系统决定进度。','复利曲线的前半段几乎是平的，大多数人在拐点前离场。','让好习惯显而易见，让坏习惯难以触及。','体验是随时间升值的资产——记忆会替你复利。','Someday 就是 Never：想做的事，给它一个日期。'];
 var DOCTRINE=[
 ['📈','1%法则','每天进步1%，一年37.8倍；每天退步1%，一年只剩0.03。差距不在某一天，而在每一天。'],
 ['⛓️','永不连续错过两次','错过一次是意外，错过两次是坏习惯的开始。昨日失守时系统会发出警报。'],
@@ -214,7 +215,9 @@ var DOCTRINE=[
 ['🌱','潜伏期','复利前段近乎平坦。体重、能力、收益都滞后于行动，不要在拐点前放弃。'],
 ['🎛️','领先 vs 滞后指标','体重/盈亏是滞后指标；训练次数/纪律执行率是领先指标。管理领先指标。'],
 ['🧩','少即是多','同时培养的新习惯 ≤ 3 个，稳定后再加。'],
-['🛡️','本金保全','睡眠、健康、关系、本金——任何一项重大损失都会让复利归零。']
+['🛡️','本金保全','睡眠、健康、关系、本金——任何一项重大损失都会让复利归零。'],
+['⚔️','恐惧是指南针','让你害怕的清单，就是你最该做的清单。先写下来，再一件件直面。'],
+['⏳','总量知觉','每天1%是节奏，余生还剩多少是总量。只看得见节奏的人，会在拐点前离场。']
 ];
 var RANKS=[[0,'列兵','PVT'],[200,'上等兵','PFC'],[500,'下士','CPL'],[1000,'中士','SGT'],[1800,'上士','SSG'],[3000,'少尉','2LT'],[4500,'中尉','1LT'],[6500,'上尉','CPT'],[9000,'少校','MAJ'],[12000,'中校','LTC'],[16000,'上校','COL'],[21000,'大校','SCOL'],[28000,'少将','MG'],[36000,'中将','LTG'],[46000,'上将','GEN'],[60000,'元帅','MSHL']];
 var MEDALS=[
@@ -231,17 +234,19 @@ var MEDALS=[
 ['📡','战地记者','写10篇日记',function(c){return c.journal>=10;}],
 ['🎯','冷血执行','纪律内交易20笔',function(c){return c.discTrades>=20;}],
 ['🚀','复利起飞','人生复利指数≥120',function(c){return c.idx>=120;}],
-['🌌','指数翻倍','人生复利指数≥200',function(c){return c.idx>=200;}]
+['🌌','指数翻倍','人生复利指数≥200',function(c){return c.idx>=200;}],
+['⚔️','直面恐惧','完成第1件恐惧清单事项',function(){return (S.memento&&S.memento.fears||[]).some(function(f){return f.done;});}]
 ];
 
 /* ================= STATE ================= */
 function mkHabit(x,t){return{id:uid(),key:x.key||'',name:x.name,icon:x.icon||'⭐',cat:x.cat||'自定义',freq:x.freq||7,enabled:true,created:t||today()};}
-function defaultState(){var t=today();return{v:SCHEMA,created:t,profile:{name:'指挥官',height:175,goalWeight:''},settings:{gain:1,loss:1,origins:[]},
-habits:LIB.filter(function(x){return x.def;}).map(function(x){return mkHabit(x,t);}),logs:{},workouts:[],lifts:[],body:[],trades:[],journal:[],ext:{}};}
+function defaultState(){var t=today();return{v:SCHEMA,created:t,profile:{name:'指挥官',height:175,goalWeight:''},settings:{gain:1,loss:1,origins:[],ghPat:'',ghRepo:'compound-os-backup',ghLast:0},
+habits:LIB.filter(function(x){return x.def;}).map(function(x){return mkHabit(x,t);}),logs:{},workouts:[],lifts:[],body:[],trades:[],journal:[],memento:{birth:'',years:80,enough:'',fears:[]},ext:{}};}
 function migrate(s){var d=defaultState();if(!s||typeof s!=='object'||!Array.isArray(s.habits))return d;
 Object.keys(d).forEach(function(k){if(s[k]===undefined)s[k]=d[k];});
 s.profile=Object.assign({},d.profile,s.profile);s.settings=Object.assign({},d.settings,s.settings);
 if(!Array.isArray(s.settings.origins))s.settings.origins=[];
+s.memento=Object.assign({},d.memento,s.memento||{});if(!Array.isArray(s.memento.fears))s.memento.fears=[];if(!s.memento.years)s.memento.years=80;
 /* 未来升级示例：if(s.v<2){ ...迁移... } */
 s.v=SCHEMA;return s;}
 var S;try{S=migrate(JSON.parse(Store.get(KEY)||'null'));}catch(e){S=defaultState();}
@@ -321,6 +326,21 @@ var best=null;hs.forEach(function(h){var p=C.per[h.id];if(!best||p.streak>best.s
 if(best&&best.streak>=7)out.push({lv:'good',t:'链条稳固 · '+best.h.name,b:'当前链条 '+best.streak+' 天。不要打断复利。'});
 if(!out.some(function(x){return x.lv==='warn';})&&out.length<2)out.push({lv:'good',t:'全线稳定',b:'没有警报。今天也只需要比昨天好1%。'});
 var order={warn:0,tip:1,good:2};out.sort(function(a,b){return order[a.lv]-order[b.lv];});return out;}
+
+function vMEMENTO(){var M=S.memento||{birth:'',years:80,enough:'',fears:[]};
+if(!M.birth)return '<div class="panel"><div class="ph"><h3>⏳ MEMENTO 死亡倒计时</h3><small>镜像 · 不入指数</small></div><div class="dim" style="font-size:12px;line-height:1.8">「你永远不知道什么时候死，但你可以知道大概还剩多少。」<br>设置出生日期后，这里会基于当前节奏，把你的习惯折算成<b class="cy">余生次数</b>。</div><button class="btn block" style="margin-top:10px" data-act="memento">⚙ 设置倒计时</button></div>';
+var T=today(),lived=diffDays(M.birth,T),left=Math.max(0,Math.round(M.years*365.25)-lived),wl=Math.floor(left/7);
+var C=compute(),rows=C.hs.map(function(h){var r=rate(h,28);return r==null?null:{h:h,n:Math.round(r*wl)};}).filter(function(x){return x&&x.n>0;}).sort(function(a,b){return b.n-a.n;}).slice(0,6);
+var fears=(M.fears||[]).slice().sort(function(a,b){return (a.done?1:0)-(b.done?1:0);}),fdone=fears.filter(function(f){return f.done;}).length;
+var tot=S.trades.reduce(function(a,t){return a+t.pnl;},0),en=parseFloat(M.enough),fueled=en>0&&tot>=en;
+return '<div class="panel"><div class="ph"><h3>⏳ MEMENTO 死亡倒计时</h3><small>按 '+M.years+' 年预期 · <span class="cy" data-act="memento" style="cursor:pointer">调整</span></small></div><div class="grid3">'+
+stat('已活',fmtN(lived)+'天')+stat('剩余',fmtN(left)+'天','am')+stat('剩余周末',fmtN(wl)+'个','vi')+'</div>'+
+(rows.length?'<div class="ph" style="margin-top:12px"><h3>余生次数 · 按当前节奏</h3></div>'+rows.map(function(r){return '<div class="row" style="justify-content:space-between;font-size:12px;padding:3px 0"><span>'+esc(r.h.icon+' '+r.h.name)+'</span><span class="cy">≈ '+fmtN(r.n)+' 次</span></div>';}).join(''):'')+
+'<div class="ph" style="margin-top:12px"><h3>⚔ 恐惧清单 · 恐惧是指南针</h3><small>'+fdone+'/'+fears.length+' 已直面</small></div>'+
+'<div class="row" style="margin-bottom:8px"><input id="fearTxt" placeholder="写下你害怕但想做的事…" style="flex:1"><button class="btn" style="padding:9px 12px" data-act="fear-add">＋</button></div>'+
+(fears.length?fears.map(function(f){var days=diffDays(f.added,T);return '<div class="it"><span style="'+(f.done?'text-decoration:line-through;opacity:.5':'')+'">'+esc(f.text)+(f.done?'':' <span class="pill">想了'+days+'天</span>')+'</span><span class="row"><button class="x" data-act="fear-toggle" data-id="'+f.id+'" style="color:'+(f.done?'var(--d)':'var(--g)')+';border:1px solid var(--ln2);width:auto;padding:2px 8px">'+(f.done?'↺':'✓ 直面')+'</button><button class="x" data-act="fear-del" data-id="'+f.id+'" data-confirm="1">✕</button></span></div>';}).join(''):'<div class="dim" style="font-size:12px;padding:6px 0">空。人类真正后悔的从不是做过的，而是没做的。</div>')+
+(en>0?'<div class="adv '+(fueled?'good':'tip')+'" style="margin-top:10px"><b>'+(fueled?'⛽ 燃料已加满':'💰 距「够了」')+'</b>'+(fueled?'累计盈亏 '+money(tot)+' 已越过「够了」线 '+en+'。该把时间兑换成体验了——去恐惧清单挑一件。':'累计盈亏 '+money(tot)+' / 「够了」线 '+en+'。钱是燃料，不是记分牌。')+'</div>':'')+
+'</div>';}
 
 /* ================= 图表 ================= */
 function chart(o){var W=340,H=o.h||150,P={l:36,r:8,t:10,b:18},iw=W-P.l-P.r,ih=H-P.t-P.b,tf=o.log?function(v){return v>0?Math.log(v):null;}:function(v){return v;};
@@ -443,7 +463,7 @@ var tj=S.journal.find(function(j){return j.date===T;});MOOD=tj?tj.mood:MOOD;
 var past=S.journal.slice().sort(function(a,b){return a.date<b.date?1:-1;}).slice(0,7);
 var fails=hs.map(function(h){return C.per[h.id];}).filter(function(p){return p.breaks>0;});
 var extHtml=EXT.map(function(m){var inner='';try{inner=m.render(API);}catch(e){inner='<pre class="code">'+esc(e.message)+'</pre>';}return '<div class="panel"><div class="ph"><h3>'+esc(m.title||m.id)+'</h3><small>EXT</small></div>'+inner+'</div>';}).join('');
-return '<div class="panel"><div class="ph"><h3>本周战报 WEEKLY</h3><small>'+mon.slice(5)+' ~ '+addDays(mon,6).slice(5)+'</small></div><div class="grid3">'+
+return vMEMENTO()+'<div class="panel"><div class="ph"><h3>本周战报 WEEKLY</h3><small>'+mon.slice(5)+' ~ '+addDays(mon,6).slice(5)+'</small></div><div class="grid3">'+
 stat('本周达成',pct(r1),r1>=r0?'up':'am')+stat('上周达成',pct(r0))+stat('指数周变化',(wch>=0?'+':'')+wch.toFixed(2)+'%',wch>=0?'up':'dn')+'</div>'+
 '<div style="margin-top:10px">'+rows.map(function(r){var p=Math.min(1,r.a/r.h.freq);return '<div class="row" style="justify-content:space-between;font-size:12px"><span>'+esc(r.h.icon+' '+r.h.name)+'</span><span>'+r.a+'/'+r.h.freq+' <span class="dim">上周'+r.b+'</span></span></div><div class="bar"><i style="width:'+(p*100)+'%;'+(p<.5?'background:#ffb020;box-shadow:none':'')+'"></i></div>';}).join('')+'</div></div>'+
 '<div class="panel"><div class="ph"><h3>战术建议 TACTICAL</h3><small>规则引擎</small></div>'+advise().map(function(a){return '<div class="adv '+a.lv+'"><b>'+esc(a.t)+'</b>'+esc(a.b)+'</div>';}).join('')+'</div>'+
@@ -495,6 +515,11 @@ function fSettings(){openSheet('⚙ 系统设置','<label class="f">代号 CALLS
 '<div class="grid2"><label class="f">完成增益 %/次<input id="sG" type="number" step="0.1" inputmode="decimal" value="'+S.settings.gain+'"></label><label class="f">失守衰减 %/次<input id="sL" type="number" step="0.1" inputmode="decimal" value="'+S.settings.loss+'"></label></div>'+
 '<label class="f">postMessage 白名单 Origin（逗号分隔）<input id="sO" value="'+esc(S.settings.origins.join(','))+'" placeholder="https://xxx.github.io"></label>'+
 '<button class="btn block" data-act="save-settings">✓ 保存设置</button>'+
+'<div class="ph" style="margin-top:16px"><h3>云备份 GITHUB</h3><small>'+(S.settings.ghPat?('<span class="up">已配置'+(S.settings.ghLast?' · 上次 '+new Date(S.settings.ghLast).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'')+'</span>'):'<span class="dim">未配置 · 每12小时自动同步</span>')+'</small></div>'+
+'<label class="f">Fine-grained Token（只存本机；仅授权备份仓库 Contents 读写，建议7天有效期）<input id="sGhPat" type="password" value="'+esc(S.settings.ghPat)+'" placeholder="github_pat_…" autocomplete="off"></label>'+
+'<label class="f">备份仓库（须为私有仓库）<input id="sGhRepo" value="'+esc(S.settings.ghRepo)+'" placeholder="compound-os-backup"></label>'+
+'<div class="dim" style="font-size:11px;margin-bottom:8px">备份内容不含 Token 本身。恢复功能用于换机或浏览器数据被系统回收时一键取回。</div>'+
+'<div class="grid2"><button class="btn c" data-act="gh-backup">☁ 立即备份</button><button class="btn c" data-act="gh-restore" data-confirm="1">⇧ 从 GitHub 恢复</button></div>'+
 '<div class="ph" style="margin-top:16px"><h3>数据 DATA</h3><small>'+(Store.ok?'<span class="up">本地持久化 ✓</span>':'<span class="dn">⚠ 内存模式：关闭即丢失，请导出</span>')+'</small></div>'+
 '<div class="grid2"><button class="btn c" data-act="export">⇩ 导出备份</button><button class="btn c" data-act="import-backup">⇧ 导入备份</button></div>'+
 '<div class="grid2" style="margin-top:8px"><button class="btn a" data-act="install">⊕ 安装到桌面</button><button class="btn a" data-act="gen-icons">◆ 下载PNG图标</button></div>'+
@@ -502,6 +527,31 @@ function fSettings(){openSheet('⚙ 系统设置','<label class="f">代号 CALLS
 '<p class="dim" style="font-size:11px;margin-top:12px">COMPOUND//OS v'+APP_VERSION+' · schema '+SCHEMA+'<br>iOS：Safari 分享 → 添加到主屏幕｜Android：Chrome 菜单 → 安装应用</p>');}
 function fExport(){var js=JSON.stringify(S,null,1);openSheet('⇩ 导出备份','<div class="grid2"><button class="btn" data-act="dl-backup">⇩ 下载 JSON</button><button class="btn c" data-act="copy-backup">⧉ 复制</button></div><label class="f" style="margin-top:10px">备份内容（下载受限时可手动复制）<textarea id="bkOut" readonly>'+esc(js)+'</textarea></label>');}
 function fImportBackup(){openSheet('⇧ 导入备份','<label class="f">选择备份文件<input type="file" id="bkFile" accept=".json,application/json"></label><label class="f">或粘贴备份 JSON<textarea id="bkTxt"></textarea></label><button class="btn r block" data-act="do-import-backup" data-confirm="1">⚠ 覆盖当前数据并导入</button>');}
+
+function fMemento(){var M=S.memento;openSheet('⏳ MEMENTO 设置','<label class="f">出生日期<input type="date" id="mBirth" value="'+esc(M.birth||'')+'" max="'+today()+'"></label>'+
+'<label class="f">预期寿命（别再假装永生）<select id="mYears">'+[60,70,80,90,100].map(function(y){return '<option value="'+y+'"'+(M.years===y?' selected':'')+'>'+y+' 岁</option>';}).join('')+'</select></label>'+
+'<label class="f">「够了」数字：累计盈亏达到多少就兑换时间<input id="mEnough" inputmode="decimal" value="'+esc(M.enough||'')+'" placeholder="例如 100000，留空则不显示"></label>'+
+'<button class="btn block" data-act="save-memento">✓ 保存</button>'+
+'<p class="dim" style="font-size:11px;margin-top:10px">死亡倒计时只是旁观的镜子，不进入复利指数的计算。参考《体验派人生》。</p>');}
+
+/* ================= GITHUB 云备份（Token 仅存本机，绝不入库入码） ================= */
+function ghFetch(path,opts){return fetch('https://api.github.com/repos/camovibe/'+S.settings.ghRepo+path,Object.assign({headers:{'Authorization':'Bearer '+S.settings.ghPat,'Accept':'application/vnd.github+json'}},opts||{}));}
+function ghB64(s){return btoa(unescape(encodeURIComponent(s)));}
+function ghUnB64(s){return decodeURIComponent(escape(atob(String(s).replace(/\s/g,''))));}
+function ghBackup(auto){if(!S.settings.ghPat){if(!auto)toast('先在 ⚙设置 中填写备份 Token','err');return;}
+var clone=JSON.parse(JSON.stringify(S));clone.settings.ghPat='';var body=JSON.stringify(clone,null,1);
+ghFetch('/contents/state.json').then(function(r){return r.status===404?null:r.json();}).then(function(meta){
+var p={message:'backup '+today(),content:ghB64(body),branch:'main'};if(meta&&meta.sha)p.sha=meta.sha;
+return ghFetch('/contents/state.json',{method:'PUT',body:JSON.stringify(p)}).then(function(r){
+if(r.status===422)return ghFetch('/contents/state.json').then(function(r2){return r2.json();}).then(function(m2){p.sha=m2.sha;return ghFetch('/contents/state.json',{method:'PUT',body:JSON.stringify(p)});});
+return r;});}).then(function(r){if(!r||!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(){
+S.settings.ghLast=Date.now();save();toast(auto?'☁ 自动备份完成':'☁ 已备份到 GitHub：'+S.settings.ghRepo);if(!auto)render();})
+.catch(function(e){if(!auto)toast('备份失败：'+e.message,'err');});}
+function ghRestore(){if(!S.settings.ghPat){toast('先配置备份 Token','err');return;}
+ghFetch('/contents/state.json').then(function(r){if(r.status===404)throw new Error('远端没有备份文件');return r.json();}).then(function(j){
+var ns=migrate(JSON.parse(ghUnB64(j.content)));if(!ns||!Array.isArray(ns.habits))throw new Error('备份格式无效');
+S=ns;save();closeSheet();VDATE=today();toast('已从 GitHub 恢复备份');render();})
+.catch(function(e){toast('恢复失败：'+e.message,'err');});}
 
 /* ================= BRIDGE ================= */
 function importTrades(arr,source){if(!Array.isArray(arr))throw new Error('trades 必须是数组');var add=0,upd=0;source=source||'import';
@@ -586,7 +636,15 @@ if(ex2){ex2.text=tx;ex2.mood=MOOD;}else S.journal.push({id:uid(),date:T,text:tx,
 if(tx.length>=10&&autoMark('review',T))marks.push('复盘');if(tx.length>=100&&autoMark('write',T))marks.push('写作');save();toast('📡 已存档'+(marks.length?' · 自动打卡'+marks.join('/'):''));render();break;
 case 'save-settings':S.profile.name=(val('sName')||'指挥官').slice(0,16);S.profile.height=parseFloat(val('sH'))||'';S.profile.goalWeight=parseFloat(val('sGW'))||'';
 S.settings.gain=Math.max(0,Math.min(10,parseFloat(val('sG'))||0));S.settings.loss=Math.max(0,Math.min(10,parseFloat(val('sL'))||0));
-S.settings.origins=val('sO').split(',').map(function(s){return s.trim();}).filter(Boolean);save();closeSheet();toast('设置已保存');render();break;
+S.settings.ghPat=val('sGhPat').trim();S.settings.ghRepo=(val('sGhRepo').trim()||'compound-os-backup').replace(/[^a-zA-Z0-9\-_.]/g,'');save();closeSheet();toast('设置已保存');render();break;
+S.settings.origins=val('sO').split(',').map(function(s){return s.trim();}).filter(Boolean);
+case 'memento':fMemento();break;
+case 'save-memento':S.memento.birth=val('mBirth');S.memento.years=+val('mYears')||80;S.memento.enough=val('mEnough').trim();save();closeSheet();toast('MEMENTO 已保存');render();break;
+case 'fear-add':var ft=val('fearTxt').trim();if(!ft){toast('先写下来');break;}S.memento.fears.push({id:uid(),text:ft.slice(0,60),added:today(),done:false});save();render();break;
+case 'fear-toggle':var ff=S.memento.fears.find(function(x){return x.id===t.dataset.id;});if(ff){ff.done=!ff.done;save();if(ff.done){toast('⚔ 直面恐惧：'+ff.text);vib([20,30,20]);}render();}break;
+case 'fear-del':S.memento.fears=S.memento.fears.filter(function(x){return x.id!==t.dataset.id;});save();render();break;
+case 'gh-backup':ghBackup(false);break;
+case 'gh-restore':ghRestore();break;
 case 'export':fExport();break;
 case 'dl-backup':try{var bl=new Blob([JSON.stringify(S,null,1)],{type:'application/json'});var u=URL.createObjectURL(bl);dl('compoundos-backup-'+today()+'.json',u);setTimeout(function(){URL.revokeObjectURL(u);},2000);}catch(err){toast('下载受限，请使用复制');}break;
 case 'copy-backup':var ta=$('#bkOut');try{navigator.clipboard.writeText(ta.value).then(function(){toast('已复制');},function(){ta.select();document.execCommand('copy');toast('已复制');});}catch(err){ta.select();try{document.execCommand('copy');toast('已复制');}catch(e2){toast('请手动长按复制');}}break;
@@ -601,11 +659,12 @@ if(t.id==='impFile'||t.id==='bkFile'){var f=t.files&&t.files[0];if(!f)return;var
 var c=t.dataset.chg;if(!c)return;var h=S.habits.find(function(x){return x.id===t.dataset.id;});if(!h)return;
 if(c==='h-en')h.enabled=t.checked;if(c==='h-freq')h.freq=+t.value;save();render();});
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__dip=e;});
-document.addEventListener('visibilitychange',function(){if(!document.hidden){processInbox();invalidate();if(VDATE>today())VDATE=today();render();}});
+document.addEventListener('visibilitychange',function(){if(!document.hidden){processInbox();invalidate();if(VDATE>today())VDATE=today();render();try{if(S.settings.ghPat&&Date.now()-(+S.settings.ghLast||0)>432e5)ghBackup(true);}catch(e){}}});
 
 /* ================= BOOT ================= */
 try{$('#appleIcon').href=drawIcon(180);}catch(e){}
 processHash();processInbox();render();
+try{setTimeout(function(){if(S.settings.ghPat&&Date.now()-(+S.settings.ghLast||0)>432e5)ghBackup(true);},4000);}catch(e){}
 if(!Store.ok)setTimeout(function(){toast('⚠ 存储受限：当前为内存模式，请及时导出备份');},1400);
 try{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1')){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});}}catch(e){}
 })();
